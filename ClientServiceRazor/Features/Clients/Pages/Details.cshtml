@@ -1,0 +1,110 @@
+﻿@page "{id:int}"
+@model ClientServiceRazor.Features.Clients.Pages.Details
+@using ClientServiceRazor.Features.Clients.Models
+@{
+    Layout = "/Pages/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Client Details";
+    // ViewData.TemplateInfo.HtmlFieldPrefix = "PhoneForm";
+}
+
+<div class="container mt-5">
+    <div class="card shadow p-4 mb-4">
+        <h3 class="mb-4 text-center">Client Details</h3>
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label class="form-label">Surname</label>
+                <input asp-for="NewClient.Surname" class="form-control"/>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">First Name</label>
+                <input asp-for="NewClient.FirstName" class="form-control"/>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Patronymic</label>
+                <input asp-for="NewClient.Patronymic" class="form-control"/>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input asp-for="NewClient.Email" class="form-control"/>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Birth Date</label>
+                <input asp-for="NewClient.BirthDate" type="date" class="form-control"/>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">
+                Save Client
+            </button>
+        </form>
+    </div>
+
+    <div class="card shadow p-4 mb-4">
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <button asp-page-handler="ShowPhoneForm"
+                    asp-route-id="@Request.RouteValues["id"]">Add Phone
+            </button>
+        </form>
+    </div>
+    
+    @if (Model.ShowPhoneForm)
+    {
+        <div class="card shadow p-4 mb-4">
+            <h4 class="mb-3 text-center">Add Phone</h4>
+
+            <form method="post">
+                @Html.AntiForgeryToken()
+
+                @* <input type="hidden" name="id" value="@Request.RouteValues["id"]"/> *@
+
+                <div class="mb-3">
+                    <label class="form-label">Phone Number</label>
+                    <input asp-for="NewPhone.Number" class="form-control" value="Model.NewPhone.Number"/>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Country Code</label>
+                    <select asp-for="NewPhone.CountryCode"
+                            asp-items="Html.GetEnumSelectList<CountryCode>()"
+                            class="form-select">
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100"
+                        asp-page-handler="AddPhone"
+                        asp-route-id="@Request.RouteValues["id"]">
+                    Add Phone
+                </button>
+            </form>
+        </div>
+    }
+    
+    <div class="card shadow p-4">
+        <h4 class="mb-3 text-center">Client Phones</h4>
+
+        <table class="table table-bordered text-center">
+            <thead class="table-dark">
+            <tr>
+                <th>Phone Number</th>
+                <th>Country Code</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var phone in Model.Phones)
+            {
+                <tr>
+                    <td>@phone.Number</td>
+                    <td>+@((int)phone.CountryCode)</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
