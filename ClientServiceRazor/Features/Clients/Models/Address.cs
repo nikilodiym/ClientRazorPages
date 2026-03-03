@@ -17,4 +17,5 @@ public class Address
     //One Address -> One Client
     public int ClientId { get; set; }
     public Client Client { get; set; } = null!;
+    public string PostalCode { get; set; } = string.Empty;
 }
